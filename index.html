@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>打卡应用</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <h1>每日打卡</h1>
+      <p>记录你的打卡历史，保持连续习惯。</p>
+    </header>
+
+    <main>
+      <section class="card checkin-card">
+        <div class="today-info">
+          <div>
+            <div class="date-label">今天</div>
+            <div id="todayDate" class="date-value"></div>
+          </div>
+          <div id="badgeLabel" class="badge-label">开始你的第一步</div>
+        </div>
+        <button id="checkinButton" class="primary-button">打卡</button>
+        <div id="message" class="message"></div>
+      </section>
+
+      <section class="card goal-card">
+        <div class="section-header">
+          <h2>习惯目标</h2>
+          <div class="goal-setting">
+            <input id="goalInput" type="number" min="1" value="21" aria-label="目标天数" />
+            <button id="setGoalButton" class="text-button">设置目标</button>
+          </div>
+        </div>
+        <div class="goal-status">
+          <div class="goal-meta">
+            <div class="stat-label">目标天数</div>
+            <div id="goalDays" class="stat-value">21</div>
+          </div>
+          <div class="progress-bar">
+            <div id="goalProgress" class="progress-fill"></div>
+          </div>
+          <div class="progress-info">完成率：<span id="goalPercent">0%</span></div>
+        </div>
+      </section>
+
+      <section class="card stats-card">
+        <div class="stats-grid">
+          <div>
+            <div class="stat-label">累计打卡</div>
+            <div id="totalCount" class="stat-value">0</div>
+          </div>
+          <div>
+            <div class="stat-label">当前连续</div>
+            <div id="currentStreak" class="stat-value">0</div>
+          </div>
+          <div>
+            <div class="stat-label">上次打卡</div>
+            <div id="lastCheckin" class="stat-value">未打卡</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card week-card">
+        <div class="section-header">
+          <h2>本周打卡概览</h2>
+          <button id="refreshQuoteButton" class="text-button">刷新灵感</button>
+        </div>
+        <ul id="weeklyList" class="weekly-list"></ul>
+      </section>
+
+      <section class="card quote-card">
+        <div class="quote-label">今日灵感</div>
+        <div id="quoteText" class="quote-text">每天坚持一点，习惯自然养成。</div>
+      </section>
+
+      <section class="card history-card">
+        <div class="section-header">
+          <h2>打卡历史</h2>
+          <button id="clearButton" class="text-button">清空记录</button>
+        </div>
+        <ul id="historyList" class="history-list"></ul>
+      </section>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
