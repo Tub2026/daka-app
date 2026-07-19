@@ -127,6 +127,12 @@
       font-size: 0.95rem;
     }
 
+    .helper-note {
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
     .list-header {
       display: flex;
       justify-content: space-between;
@@ -213,6 +219,7 @@
         <span>今日习惯打卡</span>
         <span id="clockText">正在获取时间…</span>
       </div>
+      <div class="helper-note">这是一份可直接上传的单文件网页，内容会自动保存在浏览器中。</div>
       <form id="checkinForm" class="form-grid">
         <label class="field-label" for="contentInput">今天做了什么？</label>
         <textarea id="contentInput" placeholder="例如：完成了 30 分钟阅读，整理了学习资料。"></textarea>
@@ -335,13 +342,17 @@
 
       setSubmitting(true);
       const newRecord = {
-        id: Date.now().toString(),
+        id: String(Date.now()),
         content,
         createdAt: new Date().toISOString()
       };
 
       records.unshift(newRecord);
-      saveRecords();
+      try {
+        saveRecords();
+      } catch (error) {
+        feedbackMessage.textContent = "当前浏览器环境无法保存记录，但页面仍可正常使用。";
+      }
       renderRecords();
       form.reset();
       feedbackMessage.textContent = "打卡成功，继续保持今天的好习惯。";
