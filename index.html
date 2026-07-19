@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>每享 · 学习打卡</title>
+  <title>美幸 · 习惯养成</title>
   <style>
     :root {
-      --bg: #f3fbf6;
-      --card: #ffffff;
-      --text: #17322a;
-      --muted: #5f766d;
-      --primary: #2f9e64;
-      --primary-dark: #22774a;
-      --accent: #8ce3ad;
-      --border: #dcefe4;
-      --danger: #ef4444;
-      --shadow: 0 16px 36px rgba(47, 158, 100, 0.12);
+      --bg: #111827;
+      --panel: #1f2937;
+      --panel-2: #273449;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #f59e0b;
+      --accent-soft: #fde68a;
+      --border: #374151;
+      --danger: #fb7185;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
     }
 
     * { box-sizing: border-box; }
@@ -23,8 +23,9 @@
     body {
       margin: 0;
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
-      background: linear-gradient(135deg, #f7fff9 0%, #eefbf3 100%);
+      background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
       color: var(--text);
+      min-height: 100vh;
     }
 
     .app-shell {
@@ -41,16 +42,17 @@
     .hero h1 {
       margin: 0 0 8px;
       font-size: 2rem;
+      color: var(--accent-soft);
     }
 
     .hero p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.7;
     }
 
     .card {
-      background: var(--card);
+      background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 20px;
@@ -71,42 +73,22 @@
 
     textarea {
       width: 100%;
-      min-height: 110px;
+      min-height: 120px;
       padding: 12px 14px;
       border: 1px solid var(--border);
       border-radius: 14px;
       resize: vertical;
+      background: var(--panel-2);
+      color: var(--text);
       font-size: 1rem;
       font-family: inherit;
-      background: #fcfffd;
-      color: var(--text);
     }
 
     textarea:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(47, 158, 100, 0.15);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.16);
     }
-
-    .mood-list {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .mood-option {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      cursor: pointer;
-      background: #f8fdf9;
-      color: var(--muted);
-    }
-
-    .mood-option input { accent-color: var(--primary); }
 
     .meta-row {
       display: flex;
@@ -116,18 +98,19 @@
       gap: 10px;
       color: var(--muted);
       font-size: 0.95rem;
+      margin-bottom: 10px;
     }
 
     .primary-button {
       border: none;
       border-radius: 999px;
       padding: 13px 16px;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      color: white;
+      background: linear-gradient(90deg, var(--accent), #fb923c);
+      color: #111827;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 10px 20px rgba(47, 158, 100, 0.19);
+      box-shadow: 0 10px 22px rgba(245, 158, 11, 0.24);
     }
 
     .primary-button:disabled {
@@ -138,8 +121,7 @@
 
     .message {
       min-height: 24px;
-      margin-top: 8px;
-      color: var(--primary-dark);
+      color: var(--accent-soft);
       font-size: 0.95rem;
     }
 
@@ -168,7 +150,7 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 14px;
-      background: #fcfffd;
+      background: rgba(255, 255, 255, 0.03);
     }
 
     .record-top {
@@ -185,20 +167,11 @@
       font-size: 0.9rem;
     }
 
-    .mood-pill {
-      display: inline-block;
-      padding: 5px 8px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--primary-dark);
-      background: rgba(47, 158, 100, 0.12);
-    }
-
     .record-content {
       white-space: pre-wrap;
       line-height: 1.7;
       margin-bottom: 10px;
+      color: var(--text);
     }
 
     .delete-btn {
@@ -216,7 +189,7 @@
       color: var(--muted);
       border: 1px dashed var(--border);
       border-radius: 16px;
-      background: #fbfffc;
+      background: rgba(255, 255, 255, 0.03);
     }
 
     @media (max-width: 640px) {
@@ -229,28 +202,18 @@
 <body>
   <div class="app-shell">
     <header class="hero">
-      <h1>每享</h1>
-      <p>把今天的学习进度和心情，轻轻记下来。让坚持变得更有仪式感。</p>
+      <h1>美幸</h1>
+      <p>把今天的小小坚持，记成一段温柔而稳定的习惯。</p>
     </header>
 
     <section class="card">
       <div class="meta-row">
-        <span>今天的学习打卡</span>
+        <span>今日习惯打卡</span>
         <span id="clockText">正在获取时间…</span>
       </div>
       <form id="checkinForm" class="form-grid">
-        <label class="field-label" for="contentInput">写下今天完成的学习内容</label>
-        <textarea id="contentInput" placeholder="例如：复习了 2 章数学公式，完成 20 道练习题。"></textarea>
-
-        <div>
-          <div class="field-label">今天的心情</div>
-          <div class="mood-list">
-            <label class="mood-option"><input type="radio" name="mood" value="开心" checked /> 开心</label>
-            <label class="mood-option"><input type="radio" name="mood" value="一般" /> 一般</label>
-            <label class="mood-option"><input type="radio" name="mood" value="难过" /> 难过</label>
-          </div>
-        </div>
-
+        <label class="field-label" for="contentInput">今天做了什么？</label>
+        <textarea id="contentInput" placeholder="例如：完成了 30 分钟阅读，整理了学习资料。"></textarea>
         <button class="primary-button" id="submitButton" type="submit">记录今天</button>
         <div id="feedbackMessage" class="message"></div>
       </form>
@@ -266,7 +229,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "study-checkin-records-v1";
+    const STORAGE_KEY = "habit-checkin-records-v1";
     const form = document.getElementById("checkinForm");
     const contentInput = document.getElementById("contentInput");
     const submitButton = document.getElementById("submitButton");
@@ -330,7 +293,7 @@
       recordCount.textContent = `${records.length} 条记录`;
 
       if (!records.length) {
-        recordList.innerHTML = '<li class="empty-state">还没有记录，先写下今天的学习内容吧。</li>';
+        recordList.innerHTML = '<li class="empty-state">还没有打卡记录，先从今天开始吧。</li>';
         return;
       }
 
@@ -343,7 +306,6 @@
         li.innerHTML = `
           <div class="record-top">
             <div class="record-time">${formatTime(item.createdAt)}</div>
-            <span class="mood-pill">${item.mood}</span>
           </div>
           <div class="record-content">${item.content}</div>
           <button class="delete-btn" type="button" data-id="${item.id}">删除</button>
@@ -363,10 +325,8 @@
       if (submitting) return;
 
       const content = contentInput.value.trim();
-      const mood = document.querySelector('input[name="mood"]:checked')?.value || "一般";
-
       if (!content) {
-        feedbackMessage.textContent = "请先写下今天的学习内容。";
+        feedbackMessage.textContent = "请先写下今天的习惯内容。";
         contentInput.focus();
         return;
       }
@@ -375,7 +335,6 @@
       const newRecord = {
         id: Date.now().toString(),
         content,
-        mood,
         createdAt: new Date().toISOString()
       };
 
@@ -383,8 +342,7 @@
       saveRecords();
       renderRecords();
       form.reset();
-      document.querySelector('input[name="mood"][value="开心"]').checked = true;
-      feedbackMessage.textContent = "打卡成功，继续保持学习节奏。";
+      feedbackMessage.textContent = "打卡成功，继续保持今天的好习惯。";
 
       window.setTimeout(() => {
         setSubmitting(false);
