@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>每日打卡</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>每享 · 学习打卡</title>
   <style>
     :root {
-      --bg: #f4f7ff;
+      --bg: #f3fbf6;
       --card: #ffffff;
-      --text: #172033;
-      --muted: #6b7280;
-      --primary: #4f46e5;
-      --primary-strong: #3730a3;
-      --accent: #38bdf8;
+      --text: #17322a;
+      --muted: #5f766d;
+      --primary: #2f9e64;
+      --primary-dark: #22774a;
+      --accent: #8ce3ad;
+      --border: #dcefe4;
       --danger: #ef4444;
-      --border: #e5e7eb;
+      --shadow: 0 16px 36px rgba(47, 158, 100, 0.12);
     }
 
     * { box-sizing: border-box; }
@@ -22,29 +23,30 @@
     body {
       margin: 0;
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: linear-gradient(135deg, #f7fff9 0%, #eefbf3 100%);
       color: var(--text);
-      background: linear-gradient(135deg, #eef4ff 0%, #f8fbff 100%);
     }
 
     .app-shell {
-      max-width: 920px;
+      max-width: 860px;
       margin: 0 auto;
-      padding: 24px 16px 36px;
+      padding: 24px 16px 40px;
     }
 
-    .app-header {
+    .hero {
       text-align: center;
       margin-bottom: 20px;
     }
 
-    .app-header h1 {
+    .hero h1 {
       margin: 0 0 8px;
       font-size: 2rem;
     }
 
-    .app-header p {
+    .hero p {
       margin: 0;
       color: var(--muted);
+      line-height: 1.6;
     }
 
     .card {
@@ -53,492 +55,360 @@
       border-radius: 20px;
       padding: 20px;
       margin-bottom: 16px;
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+      box-shadow: var(--shadow);
     }
 
-    .checkin-card { display: grid; gap: 14px; }
+    .form-grid {
+      display: grid;
+      gap: 14px;
+    }
 
-    .today-info {
+    .field-label {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      resize: vertical;
+      font-size: 1rem;
+      font-family: inherit;
+      background: #fcfffd;
+      color: var(--text);
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(47, 158, 100, 0.15);
+    }
+
+    .mood-list {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
-    .date-label {
-      font-size: 0.95rem;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .date-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-
-    .badge-label {
-      background: #eef2ff;
-      color: var(--primary-strong);
+    .mood-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       padding: 8px 12px;
+      border: 1px solid var(--border);
       border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.95rem;
+      cursor: pointer;
+      background: #f8fdf9;
+      color: var(--muted);
     }
 
-    .primary-button,
-    .text-button {
-      border: none;
-      cursor: pointer;
-      border-radius: 999px;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    .mood-option input { accent-color: var(--primary); }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
     }
 
     .primary-button {
-      width: 100%;
-      padding: 14px 18px;
+      border: none;
+      border-radius: 999px;
+      padding: 13px 16px;
       background: linear-gradient(90deg, var(--primary), var(--accent));
-      color: #fff;
+      color: white;
       font-size: 1rem;
       font-weight: 700;
-      box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(47, 158, 100, 0.19);
     }
 
-    .primary-button:hover { transform: translateY(-1px); }
     .primary-button:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
+      opacity: 0.75;
+      cursor: wait;
       box-shadow: none;
-    }
-
-    .text-button {
-      padding: 8px 12px;
-      background: transparent;
-      color: var(--danger);
-      font-size: 0.95rem;
     }
 
     .message {
       min-height: 24px;
-      color: var(--primary-strong);
+      margin-top: 8px;
+      color: var(--primary-dark);
       font-size: 0.95rem;
     }
 
-    .section-header {
+    .list-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
-    .goal-setting {
-      display: flex;
-      gap: 8px;
-      align-items: center;
+    .list-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
     }
 
-    .goal-setting input {
-      width: 84px;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 0.95rem;
-    }
-
-    .goal-meta,
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(120px, 1fr));
-      gap: 14px;
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .stat-value {
-      margin-top: 6px;
-      font-size: 1.35rem;
-      font-weight: 700;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 12px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-      margin: 12px 0 8px;
-    }
-
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--accent));
-      transition: width 0.3s ease;
-    }
-
-    .progress-info {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .weekly-list,
-    .history-list {
+    .record-list {
       list-style: none;
       padding: 0;
       margin: 0;
-    }
-
-    .weekly-list {
       display: grid;
-      grid-template-columns: repeat(7, minmax(0, 1fr));
-      gap: 8px;
+      gap: 10px;
     }
 
-    .weekly-list li,
-    .history-list li {
+    .record-item {
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 10px;
-      background: #f8fafc;
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.9rem;
+      border-radius: 16px;
+      padding: 14px;
+      background: #fcfffd;
     }
 
-    .weekly-list li.completed {
-      background: #eef6ff;
-      border-color: #bfdbfe;
-      color: var(--text);
-      font-weight: 700;
-    }
-
-    .history-list li {
+    .record-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      text-align: left;
+      gap: 8px;
       margin-bottom: 8px;
-      padding: 12px 14px;
+      flex-wrap: wrap;
     }
 
-    .quote-card {
-      background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(56, 189, 248, 0.1));
-    }
-
-    .quote-label {
-      font-size: 0.9rem;
+    .record-time {
       color: var(--muted);
-      margin-bottom: 8px;
+      font-size: 0.9rem;
     }
 
-    .quote-text {
-      font-size: 1rem;
+    .mood-pill {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      background: rgba(47, 158, 100, 0.12);
+    }
+
+    .record-content {
+      white-space: pre-wrap;
       line-height: 1.7;
+      margin-bottom: 10px;
     }
 
-    @media (max-width: 760px) {
-      .stats-grid,
-      .goal-meta {
-        grid-template-columns: 1fr;
-      }
+    .delete-btn {
+      border: none;
+      background: transparent;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 0;
+    }
 
-      .weekly-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .empty-state {
+      text-align: center;
+      padding: 24px 10px;
+      color: var(--muted);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      background: #fbfffc;
+    }
+
+    @media (max-width: 640px) {
+      .app-shell { padding: 16px 12px 32px; }
+      .hero h1 { font-size: 1.75rem; }
+      .primary-button { width: 100%; }
     }
   </style>
 </head>
 <body>
   <div class="app-shell">
-    <header class="app-header">
-      <h1>每日打卡</h1>
-      <p>记录你的坚持，见证习惯一点点养成。</p>
+    <header class="hero">
+      <h1>每享</h1>
+      <p>把今天的学习进度和心情，轻轻记下来。让坚持变得更有仪式感。</p>
     </header>
 
-    <main>
-      <section class="card checkin-card">
-        <div class="today-info">
-          <div>
-            <div class="date-label">今天</div>
-            <div id="todayDate" class="date-value"></div>
-          </div>
-          <div id="badgeLabel" class="badge-label">开始你的第一步</div>
-        </div>
-        <button id="checkinButton" class="primary-button">今日打卡</button>
-        <div id="message" class="message"></div>
-      </section>
+    <section class="card">
+      <div class="meta-row">
+        <span>今天的学习打卡</span>
+        <span id="clockText">正在获取时间…</span>
+      </div>
+      <form id="checkinForm" class="form-grid">
+        <label class="field-label" for="contentInput">写下今天完成的学习内容</label>
+        <textarea id="contentInput" placeholder="例如：复习了 2 章数学公式，完成 20 道练习题。"></textarea>
 
-      <section class="card goal-card">
-        <div class="section-header">
-          <h2>习惯目标</h2>
-          <div class="goal-setting">
-            <input id="goalInput" type="number" min="1" value="21" aria-label="目标天数" />
-            <button id="setGoalButton" class="text-button">设置目标</button>
+        <div>
+          <div class="field-label">今天的心情</div>
+          <div class="mood-list">
+            <label class="mood-option"><input type="radio" name="mood" value="开心" checked /> 开心</label>
+            <label class="mood-option"><input type="radio" name="mood" value="一般" /> 一般</label>
+            <label class="mood-option"><input type="radio" name="mood" value="难过" /> 难过</label>
           </div>
         </div>
-        <div class="goal-status">
-          <div class="goal-meta">
-            <div>
-              <div class="stat-label">目标天数</div>
-              <div id="goalDays" class="stat-value">21</div>
-            </div>
-            <div>
-              <div class="stat-label">完成率</div>
-              <div id="goalPercent" class="stat-value">0%</div>
-            </div>
-          </div>
-          <div class="progress-bar">
-            <div id="goalProgress" class="progress-fill"></div>
-          </div>
-        </div>
-      </section>
 
-      <section class="card stats-card">
-        <div class="stats-grid">
-          <div>
-            <div class="stat-label">累计打卡</div>
-            <div id="totalCount" class="stat-value">0</div>
-          </div>
-          <div>
-            <div class="stat-label">当前连续</div>
-            <div id="currentStreak" class="stat-value">0</div>
-          </div>
-          <div>
-            <div class="stat-label">上次打卡</div>
-            <div id="lastCheckin" class="stat-value">未打卡</div>
-          </div>
-        </div>
-      </section>
+        <button class="primary-button" id="submitButton" type="submit">记录今天</button>
+        <div id="feedbackMessage" class="message"></div>
+      </form>
+    </section>
 
-      <section class="card week-card">
-        <div class="section-header">
-          <h2>本周打卡概览</h2>
-          <button id="refreshQuoteButton" class="text-button">刷新灵感</button>
-        </div>
-        <ul id="weeklyList" class="weekly-list"></ul>
-      </section>
-
-      <section class="card quote-card">
-        <div class="quote-label">今日灵感</div>
-        <div id="quoteText" class="quote-text">每天坚持一点点，习惯自然养成。</div>
-      </section>
-
-      <section class="card history-card">
-        <div class="section-header">
-          <h2>打卡历史</h2>
-          <button id="clearButton" class="text-button">清空记录</button>
-        </div>
-        <ul id="historyList" class="history-list"></ul>
-      </section>
-    </main>
+    <section class="card">
+      <div class="list-header">
+        <h2>打卡记录</h2>
+        <span id="recordCount">0 条记录</span>
+      </div>
+      <ul id="recordList" class="record-list"></ul>
+    </section>
   </div>
 
   <script>
-    const STORAGE_KEY = "daily-checkin-data";
+    const STORAGE_KEY = "study-checkin-records-v1";
+    const form = document.getElementById("checkinForm");
+    const contentInput = document.getElementById("contentInput");
+    const submitButton = document.getElementById("submitButton");
+    const feedbackMessage = document.getElementById("feedbackMessage");
+    const recordList = document.getElementById("recordList");
+    const recordCount = document.getElementById("recordCount");
+    const clockText = document.getElementById("clockText");
 
-    const todayDateEl = document.getElementById("todayDate");
-    const checkinButton = document.getElementById("checkinButton");
-    const messageEl = document.getElementById("message");
-    const totalCountEl = document.getElementById("totalCount");
-    const currentStreakEl = document.getElementById("currentStreak");
-    const lastCheckinEl = document.getElementById("lastCheckin");
-    const historyListEl = document.getElementById("historyList");
-    const clearButton = document.getElementById("clearButton");
-    const goalInputEl = document.getElementById("goalInput");
-    const setGoalButton = document.getElementById("setGoalButton");
-    const goalDaysEl = document.getElementById("goalDays");
-    const goalProgressEl = document.getElementById("goalProgress");
-    const goalPercentEl = document.getElementById("goalPercent");
-    const weeklyListEl = document.getElementById("weeklyList");
-    const quoteTextEl = document.getElementById("quoteText");
-    const refreshQuoteButton = document.getElementById("refreshQuoteButton");
-    const badgeLabelEl = document.getElementById("badgeLabel");
+    let records = [];
+    let storageAvailable = true;
+    let submitting = false;
 
-    const quotes = [
-      "每天坚持一点点，习惯自然形成。",
-      "一小步的坚持，成就长久的改变。",
-      "别让今天的你，辜负昨天的努力。",
-      "习惯不是一两天的事，而是每天的选择。",
-      "做好今天的打卡，明天就更靠近目标。",
-    ];
-
-    function formatDate(date) {
-      return date.toLocaleDateString("zh-CN", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        weekday: "short",
+    function updateClock() {
+      const now = new Date();
+      clockText.textContent = now.toLocaleString("zh-CN", {
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
       });
     }
 
-    function getLocalDateKey(date) {
-      const year = date.getFullYear();
-      const month = `${date.getMonth() + 1}`.padStart(2, "0");
-      const day = `${date.getDate()}`.padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    }
-
-    function loadData() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return { checkins: [], goal: 21 };
-
+    function loadRecords() {
       try {
+        const raw = window.localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
         const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed)) {
-          return { checkins: parsed, goal: 21 };
-        }
-        const checkins = Array.isArray(parsed.checkins) ? parsed.checkins : [];
-        const goal = typeof parsed.goal === "number" && parsed.goal > 0 ? parsed.goal : 21;
-        return { checkins, goal };
+        return Array.isArray(parsed) ? parsed : [];
       } catch (error) {
-        return { checkins: [], goal: 21 };
+        storageAvailable = false;
+        return [];
       }
     }
 
-    function saveData(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-
-    function calculateStreak(checkins) {
-      if (!checkins.length) return 0;
-
-      const dates = new Set(checkins);
-      let streak = 0;
-      const current = new Date();
-      current.setHours(0, 0, 0, 0);
-
-      while (true) {
-        const iso = getLocalDateKey(current);
-        if (!dates.has(iso)) break;
-        streak += 1;
-        current.setDate(current.getDate() - 1);
-      }
-
-      return streak;
-    }
-
-    function getBadgeText(streak) {
-      if (streak >= 30) return "火力全开🔥";
-      if (streak >= 14) return "稳定前行💪";
-      if (streak >= 7) return "习惯成型✨";
-      if (streak >= 3) return "持续推进👍";
-      return "开始你的第一步";
-    }
-
-    function getWeeklyStatus(checkins) {
-      const dates = new Set(checkins);
-      const week = [];
-      const current = new Date();
-      current.setHours(0, 0, 0, 0);
-
-      for (let offset = 6; offset >= 0; offset -= 1) {
-        const date = new Date(current);
-        date.setDate(date.getDate() - offset);
-        const iso = getLocalDateKey(date);
-        const label = date.toLocaleDateString("zh-CN", { weekday: "short" });
-        week.push({ label, iso, done: dates.has(iso) });
-      }
-
-      return week;
-    }
-
-    function getRandomQuote() {
-      return quotes[Math.floor(Math.random() * quotes.length)];
-    }
-
-    function updateUI() {
-      const data = loadData();
-      const checkins = data.checkins;
-      const goal = data.goal;
-      const today = getLocalDateKey(new Date());
-      const lastCheckin = checkins.length ? checkins[checkins.length - 1] : null;
-      const streak = calculateStreak(checkins);
-      const percent = goal > 0 ? Math.min(100, Math.round((streak / goal) * 100)) : 0;
-
-      todayDateEl.textContent = formatDate(new Date());
-      totalCountEl.textContent = checkins.length;
-      currentStreakEl.textContent = streak;
-      lastCheckinEl.textContent = lastCheckin || "未打卡";
-      goalDaysEl.textContent = goal;
-      goalInputEl.value = goal;
-      goalProgressEl.style.width = `${percent}%`;
-      goalPercentEl.textContent = `${percent}%`;
-      badgeLabelEl.textContent = getBadgeText(streak);
-
-      const isTodayChecked = checkins.includes(today);
-      checkinButton.textContent = isTodayChecked ? "已打卡" : "今日打卡";
-      checkinButton.disabled = isTodayChecked;
-      messageEl.textContent = isTodayChecked ? "今天已打卡，明天继续保持！" : "记得每天打卡，保持习惯。";
-
-      weeklyListEl.innerHTML = "";
-      const weeklyStatus = getWeeklyStatus(checkins);
-      weeklyStatus.forEach(({ label, done }) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<div>${label}</div><div>${done ? "✅" : "—"}</div>`;
-        if (done) li.classList.add("completed");
-        weeklyListEl.appendChild(li);
-      });
-
-      historyListEl.innerHTML = "";
-      if (!checkins.length) {
-        const emptyItem = document.createElement("li");
-        emptyItem.textContent = "暂无打卡记录";
-        historyListEl.appendChild(emptyItem);
-      } else {
-        [...checkins].reverse().forEach((date) => {
-          const li = document.createElement("li");
-          li.innerHTML = `<span>${date}</span><span>已打卡</span>`;
-          historyListEl.appendChild(li);
-        });
-      }
-
-      quoteTextEl.textContent = getRandomQuote();
-    }
-
-    function addCheckin() {
-      const data = loadData();
-      const checkins = data.checkins;
-      const today = getLocalDateKey(new Date());
-
-      if (checkins.includes(today)) {
-        messageEl.textContent = "今天已经打过卡了。";
+    function saveRecords() {
+      if (!storageAvailable) {
+        feedbackMessage.textContent = "当前浏览器无法保存数据，但你仍然可以继续使用。";
         return;
       }
 
-      checkins.push(today);
-      saveData({ ...data, checkins });
-      messageEl.textContent = "打卡成功！继续保持习惯。";
-      updateUI();
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      } catch (error) {
+        storageAvailable = false;
+        feedbackMessage.textContent = "当前浏览器无法保存数据，但本次记录已显示。";
+      }
     }
 
-    function setGoal() {
-      const value = parseInt(goalInputEl.value, 10);
-      const goal = Number.isNaN(value) || value < 1 ? 21 : value;
-      const data = loadData();
-      saveData({ ...data, goal });
-      messageEl.textContent = `目标已更新为 ${goal} 天。`;
-      updateUI();
+    function formatTime(value) {
+      const date = new Date(value);
+      return date.toLocaleString("zh-CN", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
     }
 
-    function clearCheckins() {
-      if (!confirm("确定要清空所有打卡记录吗？")) return;
-      const data = loadData();
-      saveData({ checkins: [], goal: data.goal });
-      updateUI();
+    function renderRecords() {
+      recordCount.textContent = `${records.length} 条记录`;
+
+      if (!records.length) {
+        recordList.innerHTML = '<li class="empty-state">还没有记录，先写下今天的学习内容吧。</li>';
+        return;
+      }
+
+      recordList.innerHTML = "";
+      const ordered = [...records].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      ordered.forEach((item) => {
+        const li = document.createElement("li");
+        li.className = "record-item";
+        li.innerHTML = `
+          <div class="record-top">
+            <div class="record-time">${formatTime(item.createdAt)}</div>
+            <span class="mood-pill">${item.mood}</span>
+          </div>
+          <div class="record-content">${item.content}</div>
+          <button class="delete-btn" type="button" data-id="${item.id}">删除</button>
+        `;
+        recordList.appendChild(li);
+      });
     }
 
-    checkinButton.addEventListener("click", addCheckin);
-    setGoalButton.addEventListener("click", setGoal);
-    refreshQuoteButton.addEventListener("click", () => {
-      quoteTextEl.textContent = getRandomQuote();
-    });
-    clearButton.addEventListener("click", clearCheckins);
+    function setSubmitting(state) {
+      submitting = state;
+      submitButton.disabled = state;
+      submitButton.textContent = state ? "记录中..." : "记录今天";
+    }
 
-    updateUI();
+    function handleSubmit(event) {
+      event.preventDefault();
+      if (submitting) return;
+
+      const content = contentInput.value.trim();
+      const mood = document.querySelector('input[name="mood"]:checked')?.value || "一般";
+
+      if (!content) {
+        feedbackMessage.textContent = "请先写下今天的学习内容。";
+        contentInput.focus();
+        return;
+      }
+
+      setSubmitting(true);
+      const newRecord = {
+        id: Date.now().toString(),
+        content,
+        mood,
+        createdAt: new Date().toISOString()
+      };
+
+      records.unshift(newRecord);
+      saveRecords();
+      renderRecords();
+      form.reset();
+      document.querySelector('input[name="mood"][value="开心"]').checked = true;
+      feedbackMessage.textContent = "打卡成功，继续保持学习节奏。";
+
+      window.setTimeout(() => {
+        setSubmitting(false);
+      }, 400);
+    }
+
+    function handleDelete(event) {
+      const button = event.target.closest(".delete-btn");
+      if (!button) return;
+
+      const id = button.getAttribute("data-id");
+      records = records.filter((item) => item.id !== id);
+      saveRecords();
+      renderRecords();
+      feedbackMessage.textContent = "记录已删除。";
+    }
+
+    records = loadRecords();
+    updateClock();
+    renderRecords();
+
+    form.addEventListener("submit", handleSubmit);
+    recordList.addEventListener("click", handleDelete);
+    window.setInterval(updateClock, 60000);
   </script>
 </body>
 </html>
